@@ -1,4 +1,4 @@
-import React ,{ useContext , useCallback } from 'react';
+import React, { useContext, useCallback } from 'react';
 
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -31,54 +31,36 @@ const FormGrid = styled('div')(() => ({
 export default function PaymentForm() {
   const [paymentType, setPaymentType] = React.useState('creditCard');
 
-  const [cardNumber, setCardNumber] = React.useState('');
-  const [cvv, setCvv] = React.useState('');
-  const [expirationDate, setExpirationDate] = React.useState('');
-
   const { data, setData } = useContext(StepContext);
-  // console.log("data" , data);
-  // const handleChange = useCallback((e) => {
-  //   const { name, value } = e.target;
-  //   setData({
-  //     ...data,
-  //     [name]: value,
-  //   });
-  // }, [data]);
+  const handleChange = useCallback((name, value) => {
+    setData({
+      ...data,
+      [name]: value,
+    });
+  }, [data, setData]);
 
   const handlePaymentTypeChange = (event) => {
     setPaymentType(event.target.value);
   };
 
   const handleCardNumberChange = (event) => {
-    const value = event.target.value.replace(/\D/g, '');
+    let { name, value } = event.target;
+    value = value.replace(/\D/g, '');
     const formattedValue = value.replace(/(\d{4})(?=\d)/g, '$1 ');
-    console.log(value.length );
-    if (value.length <= 16) {console.log("hi");
-      // setCardNumber(formattedValue);
-      // handleChange(event);
-      const { name } = event.target;
-      setData({
-        ...data,
-        [name]: formattedValue,
-      });
-    }
+    value.length <= 16 && handleChange(name, formattedValue)
   };
 
   const handleCvvChange = (event) => {
-    const value = event.target.value.replace(/\D/g, '');
-    if (value.length <= 3) {
-      setCvv(value);
-      // handleChange(event);
-    }
+    let { name, value } = event.target;
+    value = value.replace(/\D/g, '');
+    value.length <= 3 && handleChange(name, value)
   };
 
   const handleExpirationDateChange = (event) => {
-    const value = event.target.value.replace(/\D/g, '');
+    let { name, value } = event.target;
+    value = value.replace(/\D/g, '');
     const formattedValue = value.replace(/(\d{2})(?=\d{2})/, '$1/');
-    if (value.length <= 4) {
-      setExpirationDate(formattedValue);
-      // handleChange(event);
-    }
+    value.length <= 4 && handleChange(name, formattedValue)
   };
 
   return (
@@ -177,13 +159,13 @@ export default function PaymentForm() {
               }}
             >
               <FormGrid sx={{ flexGrow: 1 }}>
-                <FormLabel htmlFor="card-number" required>
+                <FormLabel htmlFor="cardNumber" required>
                   Card number
                 </FormLabel>
-                <input
-                  id="card-number"
-                  name="card-number"
-                  autoComplete="card-number"
+                <OutlinedInput
+                  id="cardNumber"
+                  name="cardNumber"
+                  autoComplete="cardNumber"
                   placeholder="0000 0000 0000 0000"
                   required
                   value={data.cardNumber}
@@ -202,21 +184,21 @@ export default function PaymentForm() {
                   autoComplete="CVV"
                   placeholder="123"
                   required
-                  value={cvv}
+                  value={data.cvv}
                   onChange={handleCvvChange}
                 />
               </FormGrid>
               <FormGrid sx={{ flexGrow: 1 }}>
-                <FormLabel htmlFor="card-expiration" required>
+                <FormLabel htmlFor="cardExpiration" required>
                   Expiration date
                 </FormLabel>
                 <OutlinedInput
-                  id="card-expiration"
-                  name="card-expiration"
+                  id="cardExpiration"
+                  name="cardExpiration"
                   autoComplete="card-expiration"
                   placeholder="MM/YY"
                   required
-                  value={expirationDate}
+                  value={data.cardExpiration}
                   onChange={handleExpirationDateChange}
                 />
               </FormGrid>
@@ -267,7 +249,7 @@ export default function PaymentForm() {
               匯款附言:
             </Typography>
             <Typography variant="body1" fontWeight="medium">
-              Shipping address帶過來資料
+              {data.address} {data.name}
             </Typography>
           </Box>
         </Box>

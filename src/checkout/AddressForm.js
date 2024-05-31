@@ -1,7 +1,5 @@
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext } from 'react';
 
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import Grid from '@mui/material/Grid';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -23,7 +21,7 @@ export default function AddressForm() {
       ...data,
       [name]: value,
     });
-  }, [data]);
+  }, [data, setData]);
 
   return (
     <Grid container spacing={3}>

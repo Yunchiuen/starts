@@ -97,27 +97,26 @@ function getStepContent(step) {
   }
 }
 
-export default function Checkout() {
-  const [mode, setMode] = React.useState('light');
+export default function Checkout({ state, dispatch }) {
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
-  const checkoutTheme = createTheme(getCheckoutTheme(mode));
-  const defaultTheme = createTheme({ palette: { mode } });
+  const checkoutTheme = createTheme(getCheckoutTheme(state.mode));
+  const defaultTheme = createTheme({ palette: { mode:state.mode } });
   const [activeStep, setActiveStep] = React.useState(0);
 
   const [data, setData] = React.useState({});
-
+  //換背景顏色
   const toggleColorMode = () => {
-    setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    dispatch({ type: state.mode })
   };
 
   const toggleCustomTheme = () => {
     setShowCustomTheme((prev) => !prev);
   };
-
+  //下一頁
   const handleNext = () => {
     setActiveStep(activeStep + 1);
   };
-
+  //上一頁
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
@@ -204,7 +203,7 @@ export default function Checkout() {
               maxWidth: { sm: '100%', md: 600 },
             }}
           >
-            <Box
+            {/* <Box
               sx={{
                 display: { xs: 'flex', md: 'none' },
                 flexDirection: 'row',
@@ -228,7 +227,8 @@ export default function Checkout() {
                 />
               </Button>
               <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
-            </Box>
+            </Box> */}
+            {/* 順序欄 */}
             <Box
               sx={{
                 display: { xs: 'none', md: 'flex' },
@@ -239,7 +239,7 @@ export default function Checkout() {
                 height: 150,
               }}
             >
-              <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
+              <ToggleColorMode mode={state.mode} toggleColorMode={toggleColorMode} />
               <Stepper
                 id="desktop-stepper"
                 activeStep={activeStep}
@@ -262,9 +262,9 @@ export default function Checkout() {
               </Stepper>
             </Box>
           </Box>
-          <Card
+          {/* <Card
             sx={{
-              display: { xs: 'flex', md: 'none' },
+              display: { xs: 'flex' },
               width: '100%',
             }}
           >
@@ -287,7 +287,7 @@ export default function Checkout() {
               </div>
               <InfoMobile totalPrice={activeStep >= 2 ? '$144.97' : '$134.98'} />
             </CardContent>
-          </Card>
+          </Card> */}
           <Box
             sx={{
               display: 'flex',
@@ -299,7 +299,7 @@ export default function Checkout() {
               gap: { xs: 5, md: 'none' },
             }}
           >
-            <Stepper
+            {/* <Stepper
               id="mobile-stepper"
               activeStep={activeStep}
               alternativeLabel
@@ -321,8 +321,9 @@ export default function Checkout() {
                   </StepLabel>
                 </Step>
               ))}
-            </Stepper>
+            </Stepper> */}
             {activeStep === steps.length ? (
+              //第三頁
               <Stack spacing={2} useFlexGap>
                 <Typography variant="h1">📦</Typography>
                 <Typography variant="h5">Thank you for your order!</Typography>
@@ -344,6 +345,7 @@ export default function Checkout() {
             ) : (
               <React.Fragment>
                 <StepContext.Provider value={{ data, setData }}>
+                  {/* 第 1 2 3 頁 */}
                   {getStepContent(activeStep)}
                 </StepContext.Provider>
                 <Box

@@ -61,14 +61,13 @@ function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {
 //   toggleCustomTheme: PropTypes.bool.isRequired,
 // };
 
-export default function LandingPage() {
-  const [mode, setMode] = React.useState('light');
+export default function LandingPage({ state, dispatch }) {
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
-  const LPtheme = createTheme(getLPTheme(mode));
-  const defaultTheme = createTheme({ palette: { mode } });
+  const LPtheme = createTheme(getLPTheme(state.mode));
+  const defaultTheme = createTheme({ palette: { mode : state.mode } });
 
   const toggleColorMode = () => {
-    setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    dispatch({ type: state.mode })
   };
 
   const toggleCustomTheme = () => {
@@ -79,7 +78,7 @@ export default function LandingPage() {
     // 主題
     <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
       <CssBaseline />
-      <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
+      <AppAppBar mode={state.mode} toggleColorMode={toggleColorMode} />
       <Hero />
       <Box sx={{ bgcolor: 'background.default' }}>
         <LogoCollection />
